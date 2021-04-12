@@ -36,14 +36,6 @@ class Comment(Base):
     author_id = Column(Integer, ForeignKey('user.id'))
     post_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-
-class Media(Base):
-    __tablename__ = 'media'
-    id = Column(Integer, primary_key=True)
-    typemedia = Column(Enum('video', 'foto'))
-    url = Column(String(50))
-    post_id = Column(Integer, nullable=False)
-    post_id = Column(Integer, ForeignKey('user.id'))
     post = relationship(Post)
 
     def to_dict(self):
