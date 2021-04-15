@@ -21,6 +21,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True)
     post_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+    comment = relationship(Comment)
 
 class Follower(Base):
     __tablename__ = 'follower'
@@ -36,7 +37,6 @@ class Comment(Base):
     author_id = Column(Integer, ForeignKey('user.id'))
     post_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    post = relationship(Post)
 
     def to_dict(self):
         return {}
