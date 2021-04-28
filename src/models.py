@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, UniqueConstraint
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -8,62 +8,43 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Follower(Base):
-    __tablename__ = 'follower'
-    id = Column(Integer, primary_key = True)
-    user_from_id = Column(Integer, ForeignKey('user.id'))
-    user_to_id = Column(String(50), ForeignKey('user.id'))
-    user = relationship('User')
-
-class User(Base):
+class user(Base):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key = True)
-    username = Column(String(30), index = True, nullable = False)
-    firstname = Column(String(30), nullable = False)
-    lastname = Column(String(30), nullable = False)
-    email = Column(String(150), unique = True, nullable = False)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+    password = Column(String(100), nullable=False)
+    favorites = relationship('favorite', uselist=False, back_populates="parent")
 
-class Post(Base):
-    __tablename__ = 'post'
-<<<<<<< HEAD
-    id = Column(Integer, primary_key = True)
+class people(Base):
+    __tablename__ = 'people'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    birth_year = Column(String(100))
+    gender = Column(String(100))
+    height = Column(Integer)
+    skin_color = Column(String(100))
+    eye_color = Column(String(100))
+    favorites = relationship('favorite')
+
+class planet(Base):
+    __tablename__ = 'planet'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    climate = Column(String(100))
+    population = Column(Integer)
+    orbital_period = Column(Integer)
+    rotation_period = Column(Integer)
+    diamater = Column(Integer)
+    favorites = relationship('favorite')
+
+class favorite(Base):
+    __tablename__ = 'favorite'
+    id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
-=======
-    id = Column(Integer, primary_key=True)
-    post_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
-    comment = relationship(Comment)
-
-class Follower(Base):
-    __tablename__ = 'follower'
-    id = Column(Integer, primary_key=True)
-    user_from_id = Column(Integer, ForeignKey('user.id'))
-    user_to_id = Column(Integer, ForeignKey('user.id'))
->>>>>>> ad2c86f2d2d28a35f9c6c741df17c4e3f53fe7c9
-    user = relationship(User)
-
-class Comment(Base):
-    __tablename__ = 'comment'
-    id = Column(Integer, primary_key=True)
-    commentText = Column(String(150), nullable = False)
-    author_id = Column(Integer, ForeignKey('user.id'))
-    post_id = Column(Integer, ForeignKey('post.id'))
-    user = relationship('User')
-    post = relationship('Post')
-
-<<<<<<< HEAD
-class Media(Base):
-    __tablename__ = 'media'
-    id = Column(Integer, primary_key = True)
-    typemedia = Column(Enum('video', 'foto'), nullable = False)
-    url = Column(String(250), nullable = False)
-    post_id = Column(Integer, ForeignKey('post.user_id'))
-    post = relationship('Post')
-
-=======
->>>>>>> ad2c86f2d2d28a35f9c6c741df17c4e3f53fe7c9
-    def to_dict(self):
-        return {}
+    people_id = Column(Integer, ForeignKey('people.id'))
+    planet_id = Column(Integer, ForeignKey('planet.id'))
+    user = relationship("user", back_populates="child")
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
